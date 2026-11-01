@@ -1,0 +1,13 @@
+name: rag-platform
+channels:
+    - conda-forge
+dependencies:
+    - python=3.11
+    - pip
+    - pip:
+        - psycopg2-binary==2.9.9
+        - pgvector==0.3.6
+        - ollama==0.4.2
+        - python-dotenv==1.0.1
+        - pymupdf==1.24.10
+        - tqdm==4.66.5

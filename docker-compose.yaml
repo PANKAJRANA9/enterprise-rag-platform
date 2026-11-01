@@ -1,0 +1,17 @@
+services:
+  pg_pinecone:
+    image: pineconeteam/pg_pinecone:0.11.0-pg17
+    container_name: pg_pinecone_local
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret123
+      POSTGRES_DB: pinecone_db
+    ports:
+      - "5433:5432" # Maps local port 5433 to container port 5432 (avoids Windows conflicts)
+    volumes:
+      - pg_pinecone_data:/var/lib/postgresql/data
+    command: postgres -c shared_preload_libraries=pg_pinecone
+    restart: unless-stopped
+
+volumes:
+  pg_pinecone_data:
