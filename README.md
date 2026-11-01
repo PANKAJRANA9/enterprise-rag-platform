@@ -45,6 +45,11 @@ npm install && npm run dev
 
 ## API
 POST /api/ask {table, text}
+<img width="1919" height="902" alt="oneSoucre" src="https://github.com/user-attachments/assets/630f265d-ec05-4ca1-b554-cc17e0507bac" />
+
 POST /api/ask-all {text}
+
+<img width="1919" height="1024" alt="RagImg1" src="https://github.com/user-attachments/assets/c5e0b83a-b3da-4edd-a4b6-e81ce8c876f1" />
+
 GET /api/tables
 GET /api/health
