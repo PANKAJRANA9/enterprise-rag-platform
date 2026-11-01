@@ -3,7 +3,7 @@
 **Pitch:** Multi-tenant AI platform unifying CRM, Odoo, Parking, Medical, WhatsApp, NCERT with single RAG brain - RBAC, citations, analytics, $0 infra. Like Notion AI + Intercom + Odoo.
 
 ## Architecture
-React (5173) -> Spring Boot (8080) -> PGVector enterprise_docs (HNSW) -> Ollama nomic-embed-text + llama3.1:8b
+React (5173) -> Spring Boot (8080) -> PGVector enterprise_docs (HNSW) -> Ollama nomic-embed-text + llama3.2:3b 
 
 ## Quick Start (New Dev)
 ```bash
