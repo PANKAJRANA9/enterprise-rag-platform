@@ -1,9 +1,14 @@
 # OmniRAG - Enterprise AI Operations Platform v2.0 (Capstone)
-
 **Pitch:** Multi-tenant AI platform unifying CRM, Odoo, Parking, Medical, WhatsApp, NCERT with single RAG brain - RBAC, citations, analytics, $0 infra. Like Notion AI + Intercom + Odoo.
 
 ## Architecture
 React (5173) -> Spring Boot (8080) -> PGVector enterprise_docs (HNSW) -> Ollama nomic-embed-text + llama3.2:3b 
+<img width="1920" height="1280" alt="image" src="https://github.com/user-attachments/assets/bdbf6f74-46eb-478a-b650-2043f731a648" />
+<img width="1920" height="1280" alt="image" src="https://github.com/user-attachments/assets/a625ff5f-e8d3-4a4f-bebf-6a61ec887177" />
+<img width="1920" height="1280" alt="image" src="https://github.com/user-attachments/assets/7f69a7fe-15a5-4011-94b7-d339a1ba998c" />
+<img width="1920" height="1280" alt="image" src="https://github.com/user-attachments/assets/3f2cd1e0-1181-4e7e-8020-cb08d70fc1df" />
+<img width="1920" height="1280" alt="image" src="https://github.com/user-attachments/assets/9addeec3-edd8-4722-aacd-a227433a2626" />
+
 
 ## Quick Start (New Dev)
 ```bash
