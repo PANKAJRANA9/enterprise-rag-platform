@@ -51,5 +51,11 @@ POST /api/ask-all {text}
 
 <img width="1919" height="1024" alt="RagImg1" src="https://github.com/user-attachments/assets/c5e0b83a-b3da-4edd-a4b6-e81ce8c876f1" />
 
+## DB postgres pincomedb open source 100%
+a semple table enterprise_docs  with embedings
+<img width="1507" height="500" alt="image" src="https://github.com/user-attachments/assets/e631ef25-bb0d-4f49-a5bd-0f93a1d62cbd" />
+<img width="1502" height="792" alt="db_imag1" src="https://github.com/user-attachments/assets/3fc92d89-cf14-4a8a-ae2b-4b3af3eb486b" />
+
+
 GET /api/tables
 GET /api/health
