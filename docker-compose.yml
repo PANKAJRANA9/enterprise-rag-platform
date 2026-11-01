@@ -1,0 +1,41 @@
+services:
+  pg_pinecone:
+    image: pineconeteam/pg_pinecone:0.11.0-pg17
+    container_name: pg_pinecone_local
+    environment:
+      POSTGRES_DB: pinecone_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret123
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - pg_pinecone
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pg_pinecone:5432/pinecone_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: secret123
+      SPRING_AI_OLLAMA_BASE_URL: http://host.docker.internal:11434
+      SPRING_AI_OLLAMA_CHAT_MODEL: "llama3.2:3b"
+      SPRING_AI_OLLAMA_EMBEDDING_MODEL: "nomic-embed-text"
+      SPRING_MAIN_ALLOW_BEAN_DEFINITION_OVERRIDING: "true"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

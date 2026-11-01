@@ -1,0 +1,38 @@
+spring: 
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:postgresql://postgres:5432/pinecone_db
+    username: postgres
+    password: secret123
+  ai:
+    ollama:
+      base-url: http://host.docker.internal:11434
+      chat: { model: llama3.2:3b }
+      embedding: { model: nomic-embed-text }
+    vectorstore:
+      pgvector:
+        initialize-schema: false
+        table-name: enterprise_docs
+        schema-name: public
+        dimensions: 768
+        distance-type: COSINE_DISTANCE
+        index-type: HNSW
+  jackson:
+    serialization:
+      indent-output: true
+
+rag:
+  embedding-dim: 768
+  top-k: 4
+  top-k-all: 6
+  allowed-sources: crm_docs,odoo_docs,parking_docs,medical_kb,whatsapp_docs,ncert_docs
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

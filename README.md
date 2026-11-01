@@ -1,66 +1,50 @@
-# 📚 Local NCERT RAG System (Production-Ready)
+# OmniRAG - Enterprise AI Operations Platform v2.0 (Capstone)
 
-A locally hosted, open-source Retrieval-Augmented Generation (RAG) pipeline designed to ingest, embed, and retrieve NCERT textbook content. Built with **PostgreSQL**, **pg_pinecone**, and **Qwen-compatible embeddings**, this project runs entirely on your machine for free.
+**Pitch:** Multi-tenant AI platform unifying CRM, Odoo, Parking, Medical, WhatsApp, NCERT with single RAG brain - RBAC, citations, analytics, $0 infra. Like Notion AI + Intercom + Odoo.
 
-## ✨ Production Features
-- **Idempotent Ingestion**: Uses chunk hashing to prevent duplicate data if the script crashes or runs twice.
-- **Resilient Retries**: Implements exponential backoff for embedding model calls to handle temporary network/model failures.
-- **Connection Pooling**: Thread-safe database connections to handle concurrent queries without bottlenecks.
+## Architecture
+React (5173) -> Spring Boot (8080) -> PGVector enterprise_docs (HNSW) -> Ollama nomic-embed-text + llama3.1:8b
 
-## 🛠️ Prerequisites
-1. **Docker Desktop** installed and running.
-2. **Python 3.10+** installed.
-3. **Git** (optional, for cloning).
-
----
-
-## 🚀 Quick Start
-
-### Step 1: Clone and Navigate
+## Quick Start (New Dev)
 ```bash
-git clone <your-repo-url>
-cd local-pinecone
+# 1. DB
+docker compose up -d pg_pinecone
 
-```
-## step 2 : run pgpinecone in local pod
+# 2. Ollama
+ollama pull nomic-embed-text && ollama pull llama3.1:8b && ollama serve
 
-docker compose up -d
-
-### create index  
-
-
-CREATE TABLE IF NOT EXISTS parking_docs (id SERIAL, content TEXT, meta JSONB, embedding vector(768));
-CREATE TABLE IF NOT EXISTS whatsapp_docs (id SERIAL, content TEXT, meta JSONB, embedding vector(768));
-CREATE TABLE IF NOT EXISTS test_vec (id SERIAL, embedding vector(768));
-
-SELECT table_name FROM information_schema.tables WHERE table_schema='public';
-
-### delete old data if needed
-
-# Inside ingestion folder
-rm -rf src/__pycache__ src/*/__pycache__ src/*/*/__pycache__
-
-# Drop all tables from your pg_pinecone pod name pg_pinecone_local
-docker exec -it pg_pinecone_local psql -U postgres -d pinecone_db -c "DROP TABLE IF EXISTS ncert_docs, crm_docs, odoo_docs, parking_docs, medical_kb, whatsapp_docs, test_vec CASCADE;"
-
-
-### run data mock ingestio pipeline 
-# 1. Activate env
-conda activate rag-platform
-
-# 2. Make sure Ollama + DB running
-ollama serve
-docker compose up pg_pinecone -d
-
-# 3. Create .env from example
-cp .env.example .env
-
-# 4. Run ALL
+# 3. Ingestion + Migration
 cd ingestion
+conda env create -f environment.yml && conda activate rag-platform
 python main.py
+python migrate_simple.py  # 6 tables -> enterprise_docs
 
-# 5. Run single table
-python main.py --table crm_docs
+# 4. Backend
+cd ../backend
+mvn clean install && mvn spring-boot:run
 
-# 6. Test search
-python -c "from src.services.embedding_service import EmbeddingService; from src.services.vector_store_service import VectorStoreService; e=EmbeddingService(); vs=VectorStoreService(); q=e.embed_text('Acme pricing issue'); print(vs.search('crm_docs', q))"
+# 5. Frontend
+cd ../frontend
+npm install && npm run dev
+# Open http://localhost:5173
+```
+
+## Why Not Shitty?
+- Single table with metadata filtering (not 6 indexes)
+- Prod layers: Controller -> Service Interface -> Repository + GlobalExceptionHandler + TraceFilter
+- Allowlist prevents injection, empty check prevents hallucination
+- Citations + latency + traceId returned
+- $0 cost vs $70/mo Pinecone + OpenAI
+
+## Demo for Interview (5 min)
+1. Show React dashboard - 6 sources
+2. Ask "Acme pricing issue" in crm_docs -> answer with sources
+3. Ask-all "parking slot" -> searches all 6 in 1 query
+4. Show /api/health + Grafana metrics
+5. Say "Migrated 6 tables -> 1 table without re-embedding, O(1) scale"
+
+## API
+POST /api/ask {table, text}
+POST /api/ask-all {text}
+GET /api/tables
+GET /api/health

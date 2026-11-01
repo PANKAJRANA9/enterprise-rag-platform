@@ -1,7 +1,12 @@
 package com.rag.controller;
+
+import com.rag.controller.dto.AskAllRequest;
+import com.rag.controller.dto.AskRequest;
+import com.rag.controller.dto.RagResponse;
 import com.rag.service.RagService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -10,16 +15,22 @@ public class RagController {
     public RagController(RagService ragService) { this.ragService = ragService; }
 
     @PostMapping("/ask")
-    public Map<String,String> ask(@RequestBody Map<String,String> body) {
-        String q = body.get("text");
-        String ans = ragService.ask(q);
-        return Map.of("query", q, "answer", ans, "source", "crm_docs + Ollama nomic-embed-text");
+    public ResponseEntity<RagResponse> ask(@Valid @RequestBody AskRequest req) {
+        return ResponseEntity.ok(ragService.ask(req.table(), req.text()));
     }
 
-    @PostMapping("/mock/whatsapp")
-    public Map<String,Object> whatsapp(@RequestBody Map<String,String> body) {
-        String q = body.get("text");
-        String ans = ragService.ask(q);
-        return Map.of("from", body.getOrDefault("from","+91 98765 43210"), "reply", ans, "mock", true);
+    @PostMapping("/ask-all")
+    public ResponseEntity<RagResponse> askAll(@Valid @RequestBody AskAllRequest req) {
+        return ResponseEntity.ok(ragService.askAll(req.text()));
+    }
+
+    @GetMapping("/tables")
+    public ResponseEntity<?> tables() {
+        return ResponseEntity.ok(new String[]{"crm_docs","odoo_docs","parking_docs","medical_kb","whatsapp_docs","ncert_docs"});
+    }
+
+    @GetMapping("/health")
+    public ResponseEntity<?> health() {
+        return ResponseEntity.ok(java.util.Map.of("status","UP","service","enterprise-rag","version","2.0"));
     }
 }
